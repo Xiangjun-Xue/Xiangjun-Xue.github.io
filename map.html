@@ -25,39 +25,44 @@
 <script>
         // Vega-Lite specification
         const vegaLiteSpec = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "title": "Bandicoots in Australia",
-            "layer": [
-                {
-                    "data": {
-                        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Bandicoot_map/main/AUS_map_v2.json",
-                        "format": {"type": "json"}
-                    },
-                    "projection": {"type": "identity", "reflectY": true},
-                    "mark": {"type": "geoshape", "stroke": "black", "strokeWidth": 1},
-                    "width": 650,
-                    "height": 600
-                },
-                {
-                    "data": {
-                        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Bandicoot_map/main/5120data.csv"
-                    },
-                    "mark": {"type": "circle", "tooltip": {"content": "data"}},
-                    "encoding": {
-                        "longitude": {
-                            "field": "long",
-                            "type": "quantitative"
-                        },
-                        "latitude": {
-                            "field": "lat",
-                            "type": "quantitative"
-                        },
-                        "size": {"value": 10},
-                        "color": {"value": "red"}
-                    }
-                }
-            ]
-        };
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "title": "Bandicoots in Australia",
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Bandicoot_map/main/AUS_map_v2.json",
+        "format": {"type": "json"}
+      },
+      "projection": {"type": "identity", "reflectY": true}, // To flip Australia to the correct orientation
+      "mark": {"type": "geoshape", "stroke": "black", "strokeWidth": 1},
+      "width": 650,
+      "height": 600
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Bandicoot_map/main/5120data.csv"
+      },
+      "mark": {"type": "point", "tooltip": {"content": "data"}},
+      "encoding": {
+        "longitude": {
+          "field": "long",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "color": {"field": "countryConservation", "type": "nominal"},
+        "shape": {"field": "vernacularName", "type": "nominal"}
+      }
+    },
+    {
+      "transform": [{"graticule": []}],
+      "mark": {"type": "geoshape", "stroke": "gray", "strokeOpacity": 0.5},
+      "params": [{"name": "Graticule"}]
+    }
+  ]
+};
 
         // Embed the Vega-Lite visualization into the 'vis' div
         vegaEmbed("#vis", vegaLiteSpec).then(result => {}).catch(console.error);

@@ -19,6 +19,22 @@
     <option value="GDP">Life Expectancy and GDP</option>
   </select>
   <div id="vegaChart"></div>
+    function renderChart(selectedChart) {
+      vegaEmbed(vegaChart, selectedChart).then((result) => {
+        // Handle any additional configuration or actions here
+      }).catch(console.error);
+    }
+
+    chartSelector.addEventListener('change', () => {
+      const selectedValue = chartSelector.value;
+      if (selectedValue === 'lifeExpectancy') {
+        renderChart(lifeExpectancySpec);
+      } else if (selectedValue === 'schooling') {
+        renderChart(schoolingSpec);
+      }else if (selectedValue === 'GDP'){
+        renderChart(GDPSpec);
+      }
+    });
 
   <script>
     const chartSelector = document.getElementById('chartSelector');
@@ -257,22 +273,6 @@
 };
       
 
-    function renderChart(selectedChart) {
-      vegaEmbed(vegaChart, selectedChart).then((result) => {
-        // Handle any additional configuration or actions here
-      }).catch(console.error);
-    }
-
-    chartSelector.addEventListener('change', () => {
-      const selectedValue = chartSelector.value;
-      if (selectedValue === 'lifeExpectancy') {
-        renderChart(lifeExpectancySpec);
-      } else if (selectedValue === 'schooling') {
-        renderChart(schoolingSpec);
-      }else if (selectedValue === 'GDP'){
-        renderChart(GDPSpec);
-      }
-    });
 
     // Initial rendering (you can choose the default chart)
     renderChart(lifeExpectancySpec);

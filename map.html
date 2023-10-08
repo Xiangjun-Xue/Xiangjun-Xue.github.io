@@ -9,10 +9,14 @@
 <body>
   <h1>Life Expectancy Factor Impact Analysis</h1>
   <p>As society and technology have rapidly advanced, there has been a notable increase in human life expectancy in recent years. However, it is important to acknowledge that the factors contributing to this extension in lifespan are multifaceted and cannot be attributed to a single variable. The objective of this project is to facilitate a comprehensive understanding of the diverse elements that correlate with life expectancy.</p>
+  <p>Users can engage with interactive map and factor analysis tools to gain immediate insights into the relationships between life expectancy and various influencing factors across different countries or regions.</p>
+  <p>This dataset if from kaggle and package by kaggle user LASHA. Data contains life expectancy, health, immunization, and economic and demographic information about 179 countries from 2000-2015 years . The adjusted dataset has 21 variables and 2.864 rows.</p>
+  <p>Data about Population, GDP, and Life Expectancy was updated according to World Bank Data. Information about vaccinations for Measles, Hepatitis B, Polio, and Diphtheria, alcohol consumption, BMI, HIV incidents, mortality rates, and thinness were collected from World Health Organization public datasets. Information about Schooling was collected from the Our World in Data which is a project of the University of Oxford.</p>
+  <p>Data is adjusted and the missing values are filled. Countries that were missing more than 4 data columns were omitted from the database. Examples of these countries are Sudan, South Sudan, and North Korea.</p>
   <select id="chartSelector">
-    <option value="lifeExpectancy">Life Expectancy World Map</option>
-    <option value="schooling">The Relationship between Life Expectancy and Education</option>
-    <option value="GDP">The Relationship between Life Expectancy and GDP</option>
+    <option value="lifeExpectancy">Life Expectancy and Year</option>
+    <option value="schooling">Life Expectancy and Education</option>
+    <option value="GDP">Life Expectancy and GDP</option>
   </select>
   <div id="vegaChart"></div>
 
@@ -23,7 +27,7 @@
     const lifeExpectancySpec =       
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Life Expectancy World map and Line Chart",
+  "title": "Life Expectancy and year World map",
   "width": 1000, // Increased width
   "height": 800, // Increased height
   "projection": {"type": "identity", "reflectY": true},

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Vega-Lite Chart Toggle</title>
+  <title>Life Expectancy Factor Impact Analysis</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
@@ -19,21 +19,127 @@
     const chartSelector = document.getElementById('chartSelector');
     const vegaChart = document.getElementById('vegaChart');
 
-    const lifeExpectancySpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "title": "Life Expectancy World Map",
-      "width": 800,
-      "height": 600,
-      // Your Life Expectancy World Map specification here
-    };
+    const lifeExpectancySpec =       
+  {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Life expectancy World map",
+  "width": 800,
+  "height": 600, // Increased the height to accommodate both charts
+  "projection": {"type": "identity", "reflectY": true},
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "mark": {"type": "geoshape"},
+      "transform": [
+        {
+          "lookup": "properties.NAME",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+            },
+            "key": "Country",
+            "fields": ["Life_expectancy"]
+          }
+        }
+      ],
+      "encoding": {
+        "color": {
+          "field": "Life_expectancy",
+          "type": "quantitative",
+          "scale": {"type": "log", "scheme": "viridis"} // Added a color scheme for better visualization
+        },
+        "tooltip": [
+          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+          {"field": "Life_expectancy", "type": "quantitative", "title": "Life Expectancy"}
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+      },
+      "transform": [
+        {
+          "aggregate": [{"op": "mean", "field": "Life_expectancy", "as": "mean_life_expectancy"}],
+          "groupby": ["Year"]
+        }
+      ],
+      "mark": "line",
+      "encoding": {
+        "x": {"field": "Year", "type": "temporal", "title": "Year"},
+        "y": {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy"},
+        "color": {"value": "steelblue"} // You can change the color as needed
+      }
+    }
+  ]
+};
 
     const schoolingSpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "title": "Life Expectancy vs. Schooling",
-      "width": 800,
-      "height": 600,
-      // Your Life Expectancy vs. Schooling specification here
-    };
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Life expectancy World map and Schooling",
+  "width": 800,
+  "height": 600, // Increased the height to accommodate both charts
+  "projection": {"type": "identity", "reflectY": true},
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "mark": {"type": "geoshape"},
+      "transform": [
+        {
+          "lookup": "properties.NAME",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+            },
+            "key": "Country",
+            "fields": ["Schooling"] // Change the field to "Schooling"
+          }
+        }
+      ],
+      "encoding": {
+        "color": {
+          "field": "Schooling", // Change the field to "Schooling"
+          "type": "quantitative",
+          "scale": {"type": "log", "scheme": "viridis"} // Use the same color scheme for better visualization
+        },
+        "tooltip": [
+          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+          {"field": "Schooling", "type": "quantitative", "title": "Schooling"} // Change the title to "Schooling"
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+      },
+      "transform": [
+        {
+          "aggregate": [{"op": "mean", "field": "Life_expectancy", "as": "mean_life_expectancy"}],
+          "groupby": ["Schooling"] // Change grouping from "Year" to "Schooling"
+        }
+      ],
+      "mark": "line",
+      "encoding": {
+        "x": {"field": "Schooling", "type": "quantitative", "title": "Mean of Schooling"}, // Change x-axis
+        "y": {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean of Life Expectancy"}, // Change y-axis
+        "color": {"value": "steelblue"}, // You can change the color as needed
+        "tooltip": [
+          {"field": "Schooling", "type": "quantitative", "title": "Schooling"},
+          {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean of Life Expectancy"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "align": "center", "baseline": "top", "text": "This is a visualization of Life Expectancy and Schooling data.", "fontSize": 14, "x": 400, "y": 10, "color": "black"}
+    }
+  ]
+};
 
     function renderChart(selectedChart) {
       vegaEmbed(vegaChart, selectedChart).then((result) => {

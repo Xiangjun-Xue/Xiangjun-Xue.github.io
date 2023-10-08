@@ -1,82 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Vega-Lite Chart</title>
-  <!-- Include Vega-Lite and Vega-Embed scripts -->
+  <title>Vega-Lite Chart Toggle</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 <body>
-  <!-- Create a container for the chart -->
-  <div id="chart"></div>
+  <h1>Vega-Lite Chart Toggle</h1>
+  <p>Select a chart:</p>
+  <select id="chartSelector">
+    <option value="lifeExpectancy">Life Expectancy World Map</option>
+    <option value="schooling">Life Expectancy vs. Schooling</option>
+  </select>
+  <div id="vegaChart"></div>
 
   <script>
-    // Vega-Lite specification
-    var spec = 
-      {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Life expectancy World map",
-  "width": 800,
-  "height": 600, // Increased the height to accommodate both charts
-  "projection": {"type": "identity", "reflectY": true},
-  "layer": [
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
-        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
-      },
-      "mark": {"type": "geoshape"},
-      "transform": [
-        {
-          "lookup": "properties.NAME",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
-            },
-            "key": "Country",
-            "fields": ["Life_expectancy"]
-          }
-        }
-      ],
-      "encoding": {
-        "color": {
-          "field": "Life_expectancy",
-          "type": "quantitative",
-          "scale": {"type": "log", "scheme": "viridis"} // Added a color scheme for better visualization
-        },
-        "tooltip": [
-          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-          {"field": "Life_expectancy", "type": "quantitative", "title": "Life Expectancy"}
-        ]
-      }
-    },
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
-      },
-      "transform": [
-        {
-          "aggregate": [{"op": "mean", "field": "Life_expectancy", "as": "mean_life_expectancy"}],
-          "groupby": ["Year"]
-        }
-      ],
-      "mark": "line",
-      "encoding": {
-        "x": {"field": "Year", "type": "temporal", "title": "Year"},
-        "y": {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy"},
-        "color": {"value": "steelblue"} // You can change the color as needed
-      }
-    }
-  ]
-};
+    const chartSelector = document.getElementById('chartSelector');
+    const vegaChart = document.getElementById('vegaChart');
 
-    // Embed the chart in the specified container
-    vegaEmbed('#chart', spec)
-      .then(function (result) {
-        // Optional: Add any custom logic or event handlers here
-      })
-      .catch(console.error);
+    const lifeExpectancySpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "title": "Life Expectancy World Map",
+      "width": 800,
+      "height": 600,
+      // Your Life Expectancy World Map specification here
+    };
+
+    const schoolingSpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "title": "Life Expectancy vs. Schooling",
+      "width": 800,
+      "height": 600,
+      // Your Life Expectancy vs. Schooling specification here
+    };
+
+    function renderChart(selectedChart) {
+      vegaEmbed(vegaChart, selectedChart).then((result) => {
+        // Handle any additional configuration or actions here
+      }).catch(console.error);
+    }
+
+    chartSelector.addEventListener('change', () => {
+      const selectedValue = chartSelector.value;
+      if (selectedValue === 'lifeExpectancy') {
+        renderChart(lifeExpectancySpec);
+      } else if (selectedValue === 'schooling') {
+        renderChart(schoolingSpec);
+      }
+    });
+
+    // Initial rendering (you can choose the default chart)
+    renderChart(lifeExpectancySpec);
   </script>
 </body>
 </html>

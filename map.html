@@ -120,19 +120,19 @@
               "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
             },
             "key": "Country",
-            "fields": ["Schooling", "Region"] // Include "Region" in fields
+            "fields": ["GDP_per_capita", "Region"] // Include "Region" in fields
           }
         }
       ],
       "encoding": {
         "color": {
-          "field": "Schooling",
+          "field": "GDP_per_capita",
           "type": "quantitative",
           "scale": {"type": "log", "scheme": "viridis"}
         },
         "tooltip": [
           {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-          {"field": "Schooling", "type": "quantitative", "title": "Schooling"}
+          {"field": "GDP_per_capita", "type": "quantitative", "title": "GDP_per_capita"}
         ]
       },
       "selection": {
@@ -140,39 +140,67 @@
       }
     },
     {
-      "width": 1300,
-      "height": 400,
-      "data": {
-        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
-      },
 
+    "selection": {
+    "regionFilter": {
+      "type": "single",
+      "fields": ["Region"],
+      "bind": {
+        "input": "select",
+        "options": [
+          "Africa",
+          "Asia",
+          "Central America and Caribbean",
+          "European Union",
+          "Middle East",
+          "North America",
+          "South America",
+          "Rest of Europe",
+          "Oceania"
+        ],
+        "name": "Select Region"
+      }
+    }
+  },
+      "width": 1300,  // Increased width
+      "height": 1000,  // Increased height
+      "data": {"url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"},
       "transform": [
         {
-          "joinaggregate": [{"op": "min", "field": "Country", "as": "Country"}],
-          "aggregate": [{"op": "mean", "field": "Life_expectancy", "as": "mean_life_expectancy"}],
-          "groupby": ["Schooling", "Country", "Region"] // Group by "Region"
+          "filter": {
+            "and": [
+              {"selection": "regionFilter"},
+              {"field": "GDP_per_capita", "valid": true},
+              {"field": "Life_expectancy", "valid": true}
+            ]
+          }
         }
       ],
-      "mark": {
-        "type": "area",
-        "size": 50,
-        "opacity": 0.7
-      },
+      "mark": "rect",
+      "width": 400,  // Increased width
+      "height": 300,  // Increased height
       "encoding": {
-        "x": {"field": "Schooling", "type": "quantitative", "title": "Mean of Schooling"},
-        "y": {"aggregate": "sum", "field": "mean_life_expectancy", "type": "quantitative", "title": "Mean of Life Expectancy"},
-        "shape": {"field": "Region", "type": "nominal"}, // Use different shapes for "Region"
+        "x": {
+          "bin": {"maxbins": 60},
+          "field": "GDP_per_capita",
+          "type": "quantitative"
+        },
+        "y": {
+          "bin": {"maxbins": 40},
+          "field": "Life_expectancy",
+          "type": "quantitative"
+        },
         "color": {
-          "condition":{"param": "brush", "field": "Region", "type": "nominal"},
-          "value": "grey"
-          }, // Color by "Region"
+          "aggregate": "count",
+          "type": "quantitative"
           
-        
+        }
       },
-      "legend": {"title": "Region"} // Display a legend for "Region"
-    },
-    {
-      "mark": {"type": "text", "align": "center", "baseline": "top", "text": "This is a visualization of Life Expectancy and Schooling data.", "fontSize": 14, "x": 500, "y": 10, "color": "black"}
+      "config": {
+        "view": {
+          "stroke": "transparent"
+        }
+      }
     }
   ]
 };

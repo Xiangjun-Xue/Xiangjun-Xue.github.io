@@ -97,11 +97,11 @@
 };
 
     const schoolingSpec = 
-  {
+ {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": "Life Expectancy and Education World map",
   "width": 1300,
-  "height": 1200,
+  "height": 1400,
   "projection": {"type": "identity", "reflectY": true},
   "vconcat": [
     {
@@ -149,6 +149,7 @@
       "bind": {
         "input": "select",
         "options": [
+          null,
           "Africa",
           "Asia",
           "Central America and Caribbean",
@@ -177,8 +178,8 @@
         }
       ],
       "mark": "rect",
-      "width": 400,  // Increased width
-      "height": 300,  // Increased height
+      "width": 1300,  // Increased width
+      "height": 500,  // Increased height
       "encoding": {
         "x": {
           "bin": {"maxbins": 60},
@@ -204,12 +205,15 @@
     }
   ]
 };
+
+
+    
     const GDPSpec = 
-  {
+ {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Life Expectancy and GDP World map",
+  "title": "Life Expectancy and Education World map",
   "width": 1300,
-  "height": 1200,
+  "height": 1400,
   "projection": {"type": "identity", "reflectY": true},
   "vconcat": [
     {
@@ -248,7 +252,8 @@
       }
     },
     {
-
+      "width": 1300,  // Increased width
+      "height": 200,  // Increased height
     "selection": {
     "regionFilter": {
       "type": "single",
@@ -256,6 +261,7 @@
       "bind": {
         "input": "select",
         "options": [
+          null,
           "Africa",
           "Asia",
           "Central America and Caribbean",
@@ -270,8 +276,7 @@
       }
     }
   },
-      "width": 1300,  // Increased width
-      "height": 1000,  // Increased height
+
       "data": {"url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"},
       "transform": [
         {
@@ -285,8 +290,8 @@
         }
       ],
       "mark": "rect",
-      "width": 400,  // Increased width
-      "height": 300,  // Increased height
+      "width": 1300,  // Increased width
+      "height": 500,  // Increased height
       "encoding": {
         "x": {
           "bin": {"maxbins": 60},

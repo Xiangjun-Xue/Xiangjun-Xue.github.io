@@ -97,7 +97,7 @@
 };
 
     const schoolingSpec = 
-      {
+  {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": "Life Expectancy and Education World map",
   "width": 1300,
@@ -145,11 +145,7 @@
       "data": {
         "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
       },
-      "params": [{
-        "name": "brush",
-        "select": "interval",
-        "value": {"x": [55, 160], "y": [13, 37]}
-      }],
+
       "transform": [
         {
           "joinaggregate": [{"op": "min", "field": "Country", "as": "Country"}],
@@ -158,18 +154,19 @@
         }
       ],
       "mark": {
-        "type": "circle",
+        "type": "area",
         "size": 50,
         "opacity": 0.7
       },
       "encoding": {
         "x": {"field": "Schooling", "type": "quantitative", "title": "Mean of Schooling"},
-        "y": {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean of Life Expectancy"},
+        "y": {"aggregate": "sum", "field": "mean_life_expectancy", "type": "quantitative", "title": "Mean of Life Expectancy"},
         "shape": {"field": "Region", "type": "nominal"}, // Use different shapes for "Region"
         "color": {
           "condition":{"param": "brush", "field": "Region", "type": "nominal"},
           "value": "grey"
           }, // Color by "Region"
+          
         
       },
       "legend": {"title": "Region"} // Display a legend for "Region"

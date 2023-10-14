@@ -174,16 +174,17 @@
     }
   ]
 };
-    const GDPSpec = {
+    const GDPSpec = 
+      {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Life Expectancy and GDP World map",
+  "title": "Life Expectancy World map and Schooling",
   "width": 1000,
   "height": 800,
   "projection": {"type": "identity", "reflectY": true},
   "vconcat": [
     {
       "width": 1000,
-      "height": 400,
+      "height": 600,
       "data": {
         "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
         "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
@@ -197,65 +198,90 @@
               "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
             },
             "key": "Country",
-            "fields": ["GDP_per_capita", "Region", "Life_expectancy"] // Include "Region" and "Life_expectancy" in fields
+            "fields": ["Schooling", "Region"] // Include "Region" in fields
           }
         }
       ],
       "encoding": {
         "color": {
-          "field": "GDP_per_capita",
+          "field": "Schooling",
           "type": "quantitative",
           "scale": {"type": "log", "scheme": "viridis"}
         },
         "tooltip": [
           {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-          {"field": "GDP_per_capita", "type": "quantitative", "title": "GDP_per_capita"},
-          {"field": "Life_expectancy", "type": "quantitative", "title": "Life Expectancy"} // Added life expectancy to the tooltip
-        ]
-      },
-      "selection": {
-        "brush": {"type": "interval", "encodings": ["x", "y"]}
+          {"field": "Schooling", "type": "quantitative", "title": "Schooling"}
+        ],
+        "selection": {"brush": {"type": "interval", "encodings": ["x", "y"]}}
       }
     },
+    
     {
-      "width": 1000,
-      "height": 400,
-      "data": {
-        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
-      },
+      "width": 1000,  // Increased width
+      "height": 200,  // Increased height
+    "selection": {
+    "regionFilter": {
+      "type": "single",
+      "fields": ["Region"],
+      "bind": {
+        "input": "select",
+        "options": [
+          "Africa",
+          "Asia",
+          "Central America and Caribbean",
+          "European Union",
+          "Middle East",
+          "North America",
+          "South America",
+          "Rest of Europe",
+          "Oceania"
+        ],
+        "name": "Select Region"
+      }
+    }
+  },
+
+      "data": {"url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"},
       "transform": [
         {
-          "joinaggregate": [{"op": "min", "field": "Country", "as": "Country"}],
-          "aggregate": [{"op": "mean", "field": "Life_expectancy", "as": "mean_life_expectancy"}],
-          "groupby": ["GDP_per_capita", "Country", "Region"] // Group by "Region"
+          "filter": {
+            "and": [
+              {"selection": "regionFilter"},
+              {"field": "GDP_per_capita", "valid": true},
+              {"field": "Life_expectancy", "valid": true}
+            ]
+          }
         }
       ],
-      "mark": {
-        "type": "circle",
-        "size": 50,
-        "opacity": 0.7
-      },
+      "mark": "rect",
+      "width": 400,  // Increased width
+      "height": 300,  // Increased height
       "encoding": {
-        "x": {"field": "GDP_per_capita", "type": "quantitative", "title": "Mean of GDP_per_capita"},
-        "y": {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean of Life Expectancy"},
-        "shape": {"field": "Region", "type": "nominal"}, // Use different shapes for "Region"
+        "x": {
+          "bin": {"maxbins": 60},
+          "field": "GDP_per_capita",
+          "type": "quantitative"
+        },
+        "y": {
+          "bin": {"maxbins": 40},
+          "field": "Life_expectancy",
+          "type": "quantitative"
+        },
         "color": {
-          "condition": {"param": "brush", "field": "Region", "type": "nominal"},
-          "value": "grey"
-        }, // Color by "Region"
-        "tooltip": [
-          {"field": "Country", "type": "nominal", "title": "Country"},
-          {"field": "GDP_per_capita", "type": "quantitative", "title": "GDP_per_capita"},
-          {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy"} // Added mean life expectancy to the tooltip
-        ]
+          "aggregate": "count",
+          "type": "quantitative"
+          
+        }
       },
-      "legend": {"title": "Region"} // Display a legend for "Region"
-    },
-    {
-      "mark": {"type": "text", "align": "center", "baseline": "top", "text": "This is a visualization of Life Expectancy and GDP_per_capita data.", "fontSize": 14, "x": 500, "y": 10, "color": "black"}
+      "config": {
+        "view": {
+          "stroke": "transparent"
+        }
+      }
     }
   ]
 };
+
 
 
     function renderChart(selectedChart) {

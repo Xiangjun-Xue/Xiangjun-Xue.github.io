@@ -10,10 +10,9 @@
   <h1>Life Expectancy Factor Impact Analysis</h1>
   <p>As society and technology have rapidly advanced, there has been a notable increase in human life expectancy in recent years. However, it is important to acknowledge that the factors contributing to this extension in lifespan are multifaceted and cannot be attributed to a single variable. The objective of this project is to facilitate a comprehensive understanding of the diverse elements that correlate with life expectancy.</p>
 
-  
   <p>Users can engage with interactive map and factor analysis tools to gain immediate insights into the relationships between life expectancy and various influencing factors across different countries or regions.</p>
-  <p>This dataset if from kaggle and package by kaggle user LASHA. Data contains life expectancy, health, immunization, and economic and demographic information about 179 countries from 2000-2015 years . The adjusted dataset has 21 variables and 2.864 rows.</p>
-  <p>Data about Population, GDP, and Life Expectancy was updated according to World Bank Data. Information about vaccinations for Measles, Hepatitis B, Polio, and Diphtheria, alcohol consumption, BMI, HIV incidents, mortality rates, and thinness were collected from World Health Organization public datasets. Information about Schooling was collected from the Our World in Data which is a project of the University of Oxford.</p>
+  <p>This dataset is from Kaggle and packaged by Kaggle user LASHA. Data contains life expectancy, health, immunization, and economic and demographic information about 179 countries from 2000-2015 years. The adjusted dataset has 21 variables and 2,864 rows.</p>
+  <p>Data about Population, GDP, and Life Expectancy was updated according to World Bank Data. Information about vaccinations for Measles, Hepatitis B, Polio, and Diphtheria, alcohol consumption, BMI, HIV incidents, mortality rates, and thinness were collected from World Health Organization public datasets. Information about Schooling was collected from Our World in Data, which is a project of the University of Oxford.</p>
   <p>Data is adjusted and the missing values are filled. Countries that were missing more than 4 data columns were omitted from the database. Examples of these countries are Sudan, South Sudan, and North Korea.</p>
   <select id="chartSelector">
     <option value="lifeExpectancy">Life Expectancy and Year</option>
@@ -22,349 +21,337 @@
   </select>
   <div id="vegaChart"></div>
 
-
   <script>
     const chartSelector = document.getElementById('chartSelector');
     const vegaChart = document.getElementById('vegaChart');
-    const lifeExpectancyYearspec =     
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": {"text":"Mean Life Expectancy Over Time",
-  "fontSize": 30
-  },
-  "width": 800,
-  "height": 400,
-  "data": {
-    "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
-  },
-  "layer": [
-    {
-      "mark": {"type": "line", "color": "blue"},
-      "encoding": {
-        "x": {
-          "field": "Year",
-          "type": "temporal",
-          "axis": {"title": "Year", "format": "%Y"}
-        },
-        "y": {
-          "field": "Life_expectancy",
-          "type": "quantitative",
-          "aggregate": "mean",
-          "axis": {"title": "Mean Life Expectancy", "format": ".2f"},
-          "scale": {"domain": [60, 80]} // Set the scale domain for the y-axis
-        }
-      }
-    },
-    {
-      "mark": {"type": "errorband", "extent": "ci", "color": "blue"},
-      "encoding": {
-        "x": {
-          "field": "Year",
-          "type": "temporal"
-        },
-        "y": {
-          "field": "Life_expectancy",
-          "type": "quantitative",
-          "aggregate": "ci"
-        }
-      }
-    }
-  ]
-};
-    const lifeExpectancySpec =       
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": {
-    "text": "Life Expectancy index around the world",
-    "color": "#03034B",
-    "fontSize": 20
-  },
-  "width": 1300, // Increased width
-  "height": 1200, // Increased height
-  "projection": {"type": "identity", "reflectY": true},
-  "vconcat": [
-    {
-      "width": 1300, // Adjusted width for the map
-      "height": 800, // Adjusted height for the map
-      "data": {
-        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
-        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+    const lifeExpectancyYearspec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "title": {
+        "text": "Mean Life Expectancy Over Time",
+        "fontSize": 30
       },
-      "mark": {"type": "geoshape"},
-      "transform": [
-        {
-          "lookup": "properties.NAME",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
-            },
-            "key": "Country",
-            "fields": ["Life_expectancy"]
-          }
-        }
-      ],
-      "encoding": {
-        "color": {
-          "field": "Life_expectancy",
-          "type": "quantitative",
-          "scale": {"type": "log", "scheme": "viridis"} // Added a color scheme for better visualization
-        },
-        "tooltip": [
-          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-          {"field": "Life_expectancy", "type": "quantitative", "title": "Life Expectancy"}
-        ]
-      }
-    },
-    {
-      "width": 1300,
+      "width": 800,
       "height": 400,
       "data": {
         "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
       },
-      "transform": [
+      "layer": [
         {
-          "aggregate": [{"op": "mean", "field": "Life_expectancy", "as": "mean_life_expectancy"}],
-          "groupby": ["Region"]
-        },
-        
-      ],
-      "mark": "bar",
-      "encoding": {
-        "x": {"field": "Region", "type": "nominal", "title": "Region"},
-        "y": {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy", "scale": {"domain": [0, 80]}, "axis": {"format": ".2f"}}, // Adjusted the y-axis format
-        "color": {"field": "Region", "type": "nominal"},
-        "tooltip": [
-          {"field": "Region", "type": "nominal", "title": "Region"},
-          {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy"}
-        ]
-      }
-    }
-  ]
-};
-
-    const schoolingSpec = 
- {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Life Expectancy and Education World map",
-  "width": 1300,
-  "height": 1400,
-  "projection": {"type": "identity", "reflectY": true},
-  "vconcat": [
-    {
-      "width": 1300,
-      "height": 800,
-      "data": {
-        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
-        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
-      },
-      "mark": {"type": "geoshape"},
-      "transform": [
-        {
-          "lookup": "properties.NAME",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+          "mark": { "type": "line", "color": "blue" },
+          "encoding": {
+            "x": {
+              "field": "Year",
+              "type": "temporal",
+              "axis": { "title": "Year", "format": "%Y" }
             },
-            "key": "Country",
-            "fields": ["Schooling", "Region"] // Include "Region" in fields
+            "y": {
+              "field": "Life_expectancy",
+              "type": "quantitative",
+              "aggregate": "mean",
+              "axis": { "title": "Mean Life Expectancy", "format": ".2f" },
+              "scale": { "domain": [60, 80] } // Set the scale domain for the y-axis
+            }
+          }
+        },
+        {
+          "mark": { "type": "errorband", "extent": "ci", "color": "blue" },
+          "encoding": {
+            "x": {
+              "field": "Year",
+              "type": "temporal"
+            },
+            "y": {
+              "field": "Life_expectancy",
+              "type": "quantitative",
+              "aggregate": "ci"
+            }
           }
         }
-      ],
-      "encoding": {
-        "color": {
-          "field": "Schooling",
-          "type": "quantitative",
-          "scale": {"type": "log", "scheme": "viridis"}
-        },
-        "tooltip": [
-          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-          {"field": "Schooling", "type": "quantitative", "title": "Schooling"}
-        ]
-      },
-      "selection": {
-        "brush": {"type": "interval", "encodings": ["x", "y"]}
-      }
-    },
-    {
-      "width": 1300,  // Increased width
-      "height": 200,  // Increased height
-    "selection": {
-    "regionFilter": {
-      "type": "single",
-      "fields": ["Region"],
-      "bind": {
-        "input": "select",
-        "options": [
-          null,
-          "Africa",
-          "Asia",
-          "Central America and Caribbean",
-          "European Union",
-          "Middle East",
-          "North America",
-          "South America",
-          "Rest of Europe",
-          "Oceania"
-        ],
-        "name": "Select Region"
-      }
-    }
-  },
+      ]
+    };
 
-      "data": {"url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"},
-      "transform": [
+    const lifeExpectancySpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "title": {
+        "text": "Life Expectancy index around the world",
+        "color": "#03034B",
+        "fontSize": 20
+      },
+      "width": 1300, // Increased width
+      "height": 1200, // Increased height
+      "projection": { "type": "identity", "reflectY": true },
+      "vconcat": [
         {
-          "filter": {
-            "and": [
-              {"selection": "regionFilter"},
-              {"field": "Schooling", "valid": true},
-              {"field": "Life_expectancy", "valid": true}
+          "width": 1300, // Adjusted width for the map
+          "height": 800, // Adjusted height for the map
+          "data": {
+            "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
+            "format": { "type": "topojson", "feature": "ne_110m_admin_0_countries" }
+          },
+          "mark": { "type": "geoshape" },
+          "transform": [
+            {
+              "lookup": "properties.NAME",
+              "from": {
+                "data": {
+                  "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+                },
+                "key": "Country",
+                "fields": ["Life_expectancy"]
+              }
+            }
+          ],
+          "encoding": {
+            "color": {
+              "field": "Life_expectancy",
+              "type": "quantitative",
+              "scale": { "type": "log", "scheme": "viridis" } // Added a color scheme for better visualization
+            },
+            "tooltip": [
+              { "field": "properties.NAME", "type": "nominal", "title": "Country" },
+              { "field": "Life_expectancy", "type": "quantitative", "title": "Life Expectancy" }
+            ]
+          }
+        },
+        {
+          "width": 1300,
+          "height": 400,
+          "data": {
+            "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+          },
+          "transform": [
+            {
+              "aggregate": [{ "op": "mean", "field": "Life_expectancy", "as": "mean_life_expectancy" }],
+              "groupby": ["Region"]
+            },
+          ],
+          "mark": "bar",
+          "encoding": {
+            "x": { "field": "Region", "type": "nominal", "title": "Region" },
+            "y": { "field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy", "scale": { "domain": [0, 80] }, "axis": { "format": ".2f" } }, // Adjusted the y-axis format
+            "color": { "field": "Region", "type": "nominal" },
+            "tooltip": [
+              { "field": "Region", "type": "nominal", "title": "Region" },
+              { "field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy" }
             ]
           }
         }
-      ],
-      "mark": "rect",
-      "width": 1300,  // Increased width
-      "height": 500,  // Increased height
-      "encoding": {
-        "x": {
-          "bin": {"maxbins": 60},
-          "field": "Schooling",
-          "type": "quantitative"
-        },
-        "y": {
-          "bin": {"maxbins": 40},
-          "field": "Life_expectancy",
-          "type": "quantitative"
-        },
-        "color": {
-          "aggregate": "count",
-          "type": "quantitative"
-          
-        }
-      },
-      "config": {
-        "view": {
-          "stroke": "transparent"
-        }
-      }
-    }
-  ]
-};
+      ]
+    };
 
-
-    
-    const GDPSpec = 
- {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Life Expectancy and Education World map",
-  "width": 1300,
-  "height": 1400,
-  "projection": {"type": "identity", "reflectY": true},
-  "vconcat": [
-    {
+    const schoolingSpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "title": "Life Expectancy and Education World map",
       "width": 1300,
-      "height": 800,
-      "data": {
-        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
-        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
-      },
-      "mark": {"type": "geoshape"},
-      "transform": [
+      "height": 1400,
+      "projection": { "type": "identity", "reflectY": true },
+      "vconcat": [
         {
-          "lookup": "properties.NAME",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+          "width": 1300,
+          "height": 800,
+          "data": {
+            "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
+            "format": { "type": "topojson", "feature": "ne_110m_admin_0_countries" }
+          },
+          "mark": { "type": "geoshape" },
+          "transform": [
+            {
+              "lookup": "properties.NAME",
+              "from": {
+                "data": {
+                  "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+                },
+                "key": "Country",
+                "fields": ["Schooling", "Region"] // Include "Region" in fields
+              }
+            }
+          ],
+          "encoding": {
+            "color": {
+              "field": "Schooling",
+              "type": "quantitative",
+              "scale": { "type": "log", "scheme": "viridis" }
             },
-            "key": "Country",
-            "fields": ["GDP_per_capita", "Region"] // Include "Region" in fields
+            "tooltip": [
+              { "field": "properties.NAME", "type": "nominal", "title": "Country" },
+              { "field": "Schooling", "type": "quantitative", "title": "Schooling" }
+            ],
+            "selection": {
+              "brush": { "type": "interval", "encodings": ["x", "y"] }
+            }
           }
-        }
-      ],
-      "encoding": {
-        "color": {
-          "field": "GDP_per_capita",
-          "type": "quantitative",
-          "scale": {"type": "log", "scheme": "viridis"}
         },
-        "tooltip": [
-          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-          {"field": "GDP_per_capita", "type": "quantitative", "title": "GDP_per_capita"}
-        ]
-      },
-      "selection": {
-        "brush": {"type": "interval", "encodings": ["x", "y"]}
-      }
-    },
-    {
-      "width": 1300,  // Increased width
-      "height": 200,  // Increased height
-    "selection": {
-    "regionFilter": {
-      "type": "single",
-      "fields": ["Region"],
-      "bind": {
-        "input": "select",
-        "options": [
-          null,
-          "Africa",
-          "Asia",
-          "Central America and Caribbean",
-          "European Union",
-          "Middle East",
-          "North America",
-          "South America",
-          "Rest of Europe",
-          "Oceania"
-        ],
-        "name": "Select Region"
-      }
-    }
-  },
-
-      "data": {"url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"},
-      "transform": [
         {
-          "filter": {
-            "and": [
-              {"selection": "regionFilter"},
-              {"field": "GDP_per_capita", "valid": true},
-              {"field": "Life_expectancy", "valid": true}
-            ]
+          "width": 1300,  // Increased width
+          "height": 200,  // Increased height
+          "selection": {
+            "regionFilter": {
+              "type": "single",
+              "fields": ["Region"],
+              "bind": {
+                "input": "select",
+                "options": [
+                  null,
+                  "Africa",
+                  "Asia",
+                  "Central America and Caribbean",
+                  "European Union",
+                  "Middle East",
+                  "North America",
+                  "South America",
+                  "Rest of Europe",
+                  "Oceania"
+                ],
+                "name": "Select Region"
+              }
+            }
+          },
+          "data": { "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv" },
+          "transform": [
+            {
+              "filter": {
+                "and": [
+                  { "selection": "regionFilter" },
+                  { "field": "Schooling", "valid": true },
+                  { "field": "Life_expectancy", "valid": true }
+                ]
+              }
+            }
+          ],
+          "mark": "rect",
+          "width": 1300,  // Increased width
+          "height": 500,  // Increased height
+          "encoding": {
+            "x": {
+              "bin": { "maxbins": 60 },
+              "field": "Schooling",
+              "type": "quantitative"
+            },
+            "y": {
+              "bin": { "maxbins": 40 },
+              "field": "Life_expectancy",
+              "type": "quantitative"
+            },
+            "color": {
+              "aggregate": "count",
+              "type": "quantitative"
+            }
+          },
+          "config": {
+            "view": {
+              "stroke": "transparent"
+            }
           }
         }
-      ],
-      "mark": "rect",
-      "width": 1300,  // Increased width
-      "height": 500,  // Increased height
-      "encoding": {
-        "x": {
-          "bin": {"maxbins": 60},
-          "field": "GDP_per_capita",
-          "type": "quantitative"
-        },
-        "y": {
-          "bin": {"maxbins": 40},
-          "field": "Life_expectancy",
-          "type": "quantitative"
-        },
-        "color": {
-          "aggregate": "count",
-          "type": "quantitative"
-          
-        }
-      },
-      "config": {
-        "view": {
-          "stroke": "transparent"
-        }
-      }
-    }
-  ]
-};
+      ]
+    };
 
-
+    const GDPSpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "title": "Life Expectancy and GDP World map",
+      "width": 1300,
+      "height": 1400,
+      "projection": { "type": "identity", "reflectY": true },
+      "vconcat": [
+        {
+          "width": 1300,
+          "height": 800,
+          "data": {
+            "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
+            "format": { "type": "topojson", "feature": "ne_110m_admin_0_countries" }
+          },
+          "mark": { "type": "geoshape" },
+          "transform": [
+            {
+              "lookup": "properties.NAME",
+              "from": {
+                "data": {
+                  "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
+                },
+                "key": "Country",
+                "fields": ["GDP_per_capita", "Region"] // Include "Region" in fields
+              }
+            }
+          ],
+          "encoding": {
+            "color": {
+              "field": "GDP_per_capita",
+              "type": "quantitative",
+              "scale": { "type": "log", "scheme": "viridis" }
+            },
+            "tooltip": [
+              { "field": "properties.NAME", "type": "nominal", "title": "Country" },
+              { "field": "GDP_per_capita", "type": "quantitative", "title": "GDP_per_capita" }
+            ],
+            "selection": {
+              "brush": { "type": "interval", "encodings": ["x", "y"] }
+            }
+          }
+        },
+        {
+          "width": 1300,  // Increased width
+          "height": 200,  // Increased height
+          "selection": {
+            "regionFilter": {
+              "type": "single",
+              "fields": ["Region"],
+              "bind": {
+                "input": "select",
+                "options": [
+                  null,
+                  "Africa",
+                  "Asia",
+                  "Central America and Caribbean",
+                  "European Union",
+                  "Middle East",
+                  "North America",
+                  "South America",
+                  "Rest of Europe",
+                  "Oceania"
+                ],
+                "name": "Select Region"
+              }
+            }
+          },
+          "data": { "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv" },
+          "transform": [
+            {
+              "filter": {
+                "and": [
+                  { "selection": "regionFilter" },
+                  { "field": "GDP_per_capita", "valid": true },
+                  { "field": "Life_expectancy", "valid": true }
+                ]
+              }
+            }
+          ],
+          "mark": "rect",
+          "width": 1300,  // Increased width
+          "height": 500,  // Increased height
+          "encoding": {
+            "x": {
+              "bin": { "maxbins": 60 },
+              "field": "GDP_per_capita",
+              "type": "quantitative"
+            },
+            "y": {
+              "bin": { "maxbins": 40 },
+              "field": "Life_expectancy",
+              "type": "quantitative"
+            },
+            "color": {
+              "aggregate": "count",
+              "type": "quantitative"
+            }
+          },
+          "config": {
+            "view": {
+              "stroke": "transparent"
+            }
+          }
+        }
+      ]
+    };
 
     function renderChart(selectedChart) {
       vegaEmbed(vegaChart, selectedChart).then((result) => {
@@ -378,7 +365,7 @@
         renderChart(lifeExpectancySpec);
       } else if (selectedValue === 'schooling') {
         renderChart(schoolingSpec);
-      }else if (selectedValue === 'GDP'){
+      } else if (selectedValue === 'GDP') {
         renderChart(GDPSpec);
       }
     });
@@ -386,13 +373,13 @@
     renderChart(lifeExpectancySpec);
   </script>
   <p>The relationship between life expectancy and various factors such as year (time), education (schooling), and GDP (Gross Domestic Product) per capita is a complex and multifaceted one. These factors can have both direct and indirect influences on life expectancy, and their interactions may vary from one region or country to another. Here's an explanation of the relationship between life expectancy and these three factors:</p>
-  <p>1. Year (Time): <p>
-  <p>     - Temporal Trends: Life expectancy tends to increase over time due to advances in healthcare, medical technology, sanitation, and overall improvements in living conditions. As societies progress, people typically have access to better healthcare, nutrition, and disease prevention, leading to longer life expectancy.
-  </p>
+  <p>1. Year (Time):</p>
+  <p>   - Temporal Trends: Life expectancy tends to increase over time due to advances in healthcare, medical technology, sanitation, and overall improvements in living conditions. As societies progress, people typically have access to better healthcare, nutrition, and disease prevention, leading to longer life expectancy.</p>
   <p>2. Education (Schooling):</p>
-<p>     - Health Literacy: Education plays a crucial role in improving health literacy. People with higher levels of education often have better knowledge of healthcare practices, disease prevention, and healthy lifestyles, which can contribute to longer life expectancy.</p>
-<p>     - Access to Resources: Education can also provide individuals with better access to job opportunities and higher income, which can lead to improved living standards, including better healthcare access and nutrition.</p>
+  <p>   - Health Literacy: Education plays a crucial role in improving health literacy. People with higher levels of education often have better knowledge of healthcare practices, disease prevention, and healthy lifestyles, which can contribute to longer life expectancy.</p>
+  <p>   - Access to Resources: Education can also provide individuals with better access to job opportunities and higher income, which can lead to improved living standards, including better healthcare access and nutrition.</p>
   <p>3. GDP per Capita:</p>
-<p>     - Economic Development: Higher GDP per capita generally correlates with greater economic development. Countries with higher economic prosperity tend to invest more in healthcare infrastructure and public services, contributing to better life expectancy.</p>
-<p>     - Resource Allocation: Wealthier countries often allocate more resources to healthcare, medical research, and social safety nets. This results in improved healthcare quality and accessibility, positively impacting life expectancy.</p>
+  <p>   - Economic Development: Higher GDP per capita generally correlates with greater economic development. Countries with higher economic prosperity tend to invest more in healthcare infrastructure and public services, contributing to better life expectancy.</p>
+  <p>   - Resource Allocation: Wealthier countries often allocate more resources to healthcare, medical research, and social safety nets. This results in improved healthcare quality and accessibility, positively impacting life expectancy.</p>
+</body>
 </html>

@@ -28,7 +28,11 @@
     const lifeExpectancySpec =       
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Life Expectancy and year World map",
+    "title": {
+    "text": "Life Expectancy index around the world",
+    "color": "#03034B",
+    "fontSize": 20
+  },
   "width": 1000, // Increased width
   "height": 800, // Increased height
   "projection": {"type": "identity", "reflectY": true},
@@ -66,24 +70,25 @@
       }
     },
     {
-      "width": 1000, // Adjusted width for the line chart
-      "height": 400, // Adjusted height for the line chart
+      "width": 1000,
+      "height": 400,
       "data": {
         "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
       },
       "transform": [
         {
           "aggregate": [{"op": "mean", "field": "Life_expectancy", "as": "mean_life_expectancy"}],
-          "groupby": ["Year"]
-        }
+          "groupby": ["Region"]
+        },
+        
       ],
-      "mark": "line",
+      "mark": "bar",
       "encoding": {
-        "x": {"field": "Year", "type": "temporal", "title": "Year"},
-        "y": {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy", "scale": {"domain": [60, 80]}}, // Change y-axis scale
-        "color": {"value": "steelblue"}, // You can change the color as needed
+        "x": {"field": "Region", "type": "nominal", "title": "Region"},
+        "y": {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy", "scale": {"domain": [0, 80]}, "axis": {"format": ".2f"}}, // Adjusted the y-axis format
+        "color": {"field": "Region", "type": "nominal"},
         "tooltip": [
-          {"field": "Year", "type": "temporal", "title": "Year"},
+          {"field": "Region", "type": "nominal", "title": "Region"},
           {"field": "mean_life_expectancy", "type": "quantitative", "title": "Mean Life Expectancy"}
         ]
       }

@@ -15,7 +15,8 @@
   <p>Data about Population, GDP, and Life Expectancy was updated according to World Bank Data. Information about vaccinations for Measles, Hepatitis B, Polio, and Diphtheria, alcohol consumption, BMI, HIV incidents, mortality rates, and thinness were collected from World Health Organization public datasets. Information about Schooling was collected from Our World in Data, which is a project of the University of Oxford.</p>
   <p>Data is adjusted and the missing values are filled. Countries that were missing more than 4 data columns were omitted from the database. Examples of these countries are Sudan, South Sudan, and North Korea.</p>
   <select id="chartSelector">
-    <option value="lifeExpectancy">Life Expectancy and Year</option>
+    <option value="lifeExpectancyYearspec">Life Expectancy trend from 2000 to 2015</option>
+    <option value="lifeExpectancy">Life Expectancy map in different area</option>
     <option value="schooling">Life Expectancy and Education</option>
     <option value="GDP">Life Expectancy and GDP</option>
   </select>
@@ -23,50 +24,69 @@
 
   <script>
         const lifeExpectancyYearspec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "title": {
-        "text": "Mean Life Expectancy Over Time",
-        "fontSize": 30
-      },
-      "width": 800,
-      "height": 400,
-      "data": {
-        "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv"
-      },
-      "layer": [
-        {
-          "mark": { "type": "line", "color": "blue" },
-          "encoding": {
-            "x": {
-              "field": "Year",
-              "type": "temporal",
-              "axis": { "title": "Year", "format": "%Y" }
-            },
-            "y": {
-              "field": "Life_expectancy",
-              "type": "quantitative",
-              "aggregate": "mean",
-              "axis": { "title": "Mean Life Expectancy", "format": ".2f" },
-              "scale": { "domain": [60, 80] } // Set the scale domain for the y-axis
-            }
-          }
-        },
-        {
-          "mark": { "type": "errorband", "extent": "ci", "color": "blue" },
-          "encoding": {
-            "x": {
-              "field": "Year",
-              "type": "temporal"
-            },
-            "y": {
-              "field": "Life_expectancy",
-              "type": "quantitative",
-              "aggregate": "ci"
-            }
-          }
-        }
-      ]
-    };
+  "width": 1300,
+  "height": 500,
+  "selection": {
+    "regionFilter": {
+      "type": "single",
+      "fields": ["Region"],
+      "bind": {
+        "input": "select",
+        "options": [
+          null,
+          "Africa",
+          "Asia",
+          "Central America and Caribbean",
+          "European Union",
+          "Middle East",
+          "North America",
+          "South America",
+          "Rest of Europe",
+          "Oceania"
+        ],
+        "name": "Select Region"
+      }
+    }
+  },
+  "data": { "url": "https://raw.githubusercontent.com/Xiangjun-Xue/Life_expectancy/main/Life-Expectancy-WHO.csv" },
+  "transform": [
+    {
+      "filter": {
+        "and": [
+          { "selection": "regionFilter" },
+          { "field": "Schooling", "valid": true },
+          { "field": "Life_expectancy", "valid": true }
+        ]
+      }
+    },
+    {
+      "aggregate": [
+        { "op": "mean", "field": "Life_expectancy", "as": "mean_Life_expectancy" }
+      ],
+      "groupby": ["Year"]
+    }
+  ],
+  "mark": "line",
+  "width": 1300,
+  "height": 500,
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal"
+    },
+    "y": {
+      "field": "mean_Life_expectancy",
+      "type": "quantitative",
+      "title": "Mean Life Expectancy",
+      "scale": { "domain": [50, 80] }
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": "transparent"
+    }
+  }
+};
     const chartSelector = document.getElementById('chartSelector');
     const vegaChart = document.getElementById('vegaChart');
 
@@ -362,7 +382,10 @@
 
     chartSelector.addEventListener('change', () => {
       const selectedValue = chartSelector.value;
-      if (selectedValue === 'lifeExpectancy') {
+        if (selectedValue === 'lifeExpectancyYearspec'){
+          renderChart(lifeExpectancyYearspec);
+        }
+        else if (selectedValue === 'lifeExpectancy') {
         renderChart(lifeExpectancySpec);
       } else if (selectedValue === 'schooling') {
         renderChart(schoolingSpec);
@@ -371,7 +394,7 @@
       }
     });
     // Initial rendering (you can choose the default chart)
-    renderChart(lifeExpectancySpec);
+    renderChart(lifeExpectancyYearspec);
   </script>
   <p>The relationship between life expectancy and various factors such as year (time), education (schooling), and GDP (Gross Domestic Product) per capita is a complex and multifaceted one. These factors can have both direct and indirect influences on life expectancy, and their interactions may vary from one region or country to another. Here's an explanation of the relationship between life expectancy and these three factors:</p>
   <p>1. Year (Time):</p>

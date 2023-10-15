@@ -2,20 +2,38 @@
 <html>
 <head>
   <title>Life Expectancy Factor Impact Analysis</title>
+  <style>
+    body {
+      background-image: url('background.jpg'); /* Replace 'background.jpg' with the path to your background image */
+      background-size: cover;
+      background-repeat: no-repeat;
+      font-family: Arial, sans-serif;
+      color: #333; /* Default text color */
+    }
+
+    h1, h2 {
+      color: #03034B; /* Highlighted text color */
+    }
+
+    .highlighted-text {
+      color: #03034B; /* Highlighted text color */
+      font-weight: bold;
+    }
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 <body>
   <h1>Life Expectancy Factor Impact Analysis</h1>
-  <p>As society and technology have rapidly advanced, there has been a notable increase in human life expectancy in recent years. However, it is important to acknowledge that the factors contributing to this extension in lifespan are multifaceted and cannot be attributed to a single variable. The objective of this project is to facilitate a comprehensive understanding of the diverse elements that correlate with life expectancy.</p>
+  <p>As society and technology have <span class="highlighted-text">rapidly advanced</span>, there has been a notable increase in human <span class="highlighted-text">life expectancy</span> in recent years. However, it is important to acknowledge that the factors contributing to this extension in <span class="highlighted-text">lifespan</span> are <span class="highlighted-text">multifaceted</span> and cannot be attributed to a single variable. The objective of this project is to facilitate a comprehensive understanding of the diverse elements that correlate with <span class="highlighted-text">life expectancy</span>.</p>
 
-  <p>Users can engage with interactive map and factor analysis tools to gain immediate insights into the relationships between life expectancy and various influencing factors across different countries or regions.</p>
-  <p>This dataset is from Kaggle and packaged by Kaggle user LASHA. Data contains life expectancy, health, immunization, and economic and demographic information about 179 countries from 2000-2015 years. The adjusted dataset has 21 variables and 2,864 rows.</p>
-  <p>Data about Population, GDP, and Life Expectancy was updated according to World Bank Data. Information about vaccinations for Measles, Hepatitis B, Polio, and Diphtheria, alcohol consumption, BMI, HIV incidents, mortality rates, and thinness were collected from World Health Organization public datasets. Information about Schooling was collected from Our World in Data, which is a project of the University of Oxford.</p>
+  <p>Users can engage with <span class="highlighted-text">interactive map</span> and factor analysis tools to gain immediate insights into the relationships between <span class="highlighted-text">life expectancy</span> and various influencing factors across different countries or regions.</p>
+  <p>This dataset is from Kaggle and packaged by Kaggle user <span class="highlighted-text">LASHA</span>. Data contains <span class="highlighted-text">life expectancy</span>, <span class="highlighted-text">health</span>, immunization, and <span class="highlighted-text">economic</span> and <span class="highlighted-text">demographic</span> information about 179 countries from 2000-2015 years. The adjusted dataset has <span class="highlighted-text">21 variables</span> and <span class="highlighted-text">2,864 rows</span>.</p>
+  <p>Data about <span class="highlighted-text">Population</span>, <span class="highlighted-text">GDP</span>, and <span class="highlighted-text">Life Expectancy</span> was updated according to World Bank Data. Information about vaccinations for <span class="highlighted-text">Measles</span>, <span class="highlighted-text">Hepatitis B</span>, <span class="highlighted-text">Polio</span>, and <span class="highlighted-text">Diphtheria</span>, <span class="highlighted-text">alcohol consumption</span>, <span class="highlighted-text">BMI</span>, <span class="highlighted-text">HIV incidents</span>, mortality rates, and <span class="highlighted-text">thinness</span> were collected from World Health Organization public datasets. Information about <span class="highlighted-text">Schooling</span> was collected from Our World in Data, which is a project of the University of Oxford.</p>
   <select id="chartSelector">
     <option value="lifeExpectancyYearspec">Life Expectancy trend from 2000 to 2015</option>
-    <option value="lifeExpectancy">Life Expectancy map in different area</option>
+    <option value="lifeExpectancy">Life Expectancy map in different areas</option>
     <option value="schooling">Life Expectancy and Education</option>
     <option value="GDP">Life Expectancy and GDP</option>
   </select>
@@ -395,14 +413,14 @@
     // Initial rendering (you can choose the default chart)
     renderChart(lifeExpectancyYearspec);
   </script>
-  <p>The relationship between life expectancy and various factors such as year (time), education (schooling), and GDP (Gross Domestic Product) per capita is a complex and multifaceted one. These factors can have both direct and indirect influences on life expectancy, and their interactions may vary from one region or country to another. Here's an explanation of the relationship between life expectancy and these three factors:</p>
+  <p>The relationship between <span class="highlighted-text">life expectancy</span> and various factors such as <span class="highlighted-text">year (time)</span>, <span class="highlighted-text">education (schooling)</span>, and <span class="highlighted-text">GDP (Gross Domestic Product)</span> per capita is a complex and multifaceted one. These factors can have both direct and indirect influences on <span class="highlighted-text">life expectancy</span>, and their interactions may vary from one region or country to another. Here's an explanation of the relationship between <span class="highlighted-text">life expectancy</span> and these three factors:</p>
   <p><strong>1. Year (Time):</strong></p>
-  <p>   - Temporal Trends: Life expectancy tends to increase over time due to advances in healthcare, medical technology, sanitation, and overall improvements in living conditions. As societies progress, people typically have access to better healthcare, nutrition, and disease prevention, leading to longer life expectancy.</p>
+  <p>   - <span class="highlighted-text">Temporal Trends</span>: <span class="highlighted-text">Life expectancy</span> tends to increase over time due to advances in healthcare, medical technology, sanitation, and overall improvements in living conditions. As societies progress, people typically have access to better healthcare, nutrition, and disease prevention, leading to longer <span class="highlighted-text">life expectancy</span>.</p>
   <p><strong>2. Education (Schooling):</strong></p>
-  <p>   - Health Literacy: Education plays a crucial role in improving health literacy. People with higher levels of education often have better knowledge of healthcare practices, disease prevention, and healthy lifestyles, which can contribute to longer life expectancy.</p>
-  <p>   - Access to Resources: Education can also provide individuals with better access to job opportunities and higher income, which can lead to improved living standards, including better healthcare access and nutrition.</p>
+  <p>   - <span class="highlighted-text">Health Literacy</span>: <span class="highlighted-text">Education</span> plays a crucial role in improving health literacy. People with higher levels of education often have better knowledge of healthcare practices, disease prevention, and healthy lifestyles, which can contribute to longer <span class="highlighted-text">life expectancy</span>.</p>
+  <p>   - <span class="highlighted-text">Access to Resources</span>: <span class="highlighted-text">Education</span> can also provide individuals with better access to job opportunities and higher income, which can lead to improved living standards, including better healthcare access and nutrition.</p>
   <p><strong>3. GDP per Capita:</strong></p>
-  <p>   - Economic Development: Higher GDP per capita generally correlates with greater economic development. Countries with higher economic prosperity tend to invest more in healthcare infrastructure and public services, contributing to better life expectancy.</p>
-  <p>   - Resource Allocation: Wealthier countries often allocate more resources to healthcare, medical research, and social safety nets. This results in improved healthcare quality and accessibility, positively impacting life expectancy.</p>
-</body>
+  <p>   - <span class="highlighted-text">Economic Development</span>: Higher <span class="highlighted-text">GDP per capita</span> generally correlates with greater economic development. Countries with higher economic prosperity tend to invest more in healthcare infrastructure and public services, contributing to better <span class="highlighted-text">life expectancy</span>.</p>
+  <p>   - <span class="highlighted-text">Resource Allocation</span>: Wealthier countries often allocate more resources to healthcare, medical research, and social safety nets. This results in improved healthcare quality and accessibility, positively impacting <span class="highlighted-text">life expectancy</span>.</p>
+  </body>
 </html>
